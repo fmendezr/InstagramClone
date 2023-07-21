@@ -11,6 +11,7 @@ https://docs.djangoproject.com/en/4.2/ref/settings/
 """
 
 import environ
+import os 
 from pathlib import Path
 
 env = environ.Env(
@@ -20,7 +21,7 @@ env = environ.Env(
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
-environ.Env.read_env(BASE_DIR / '.env')
+environ.Env.read_env(os.path.join(BASE_DIR, '.env'))
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/4.2/howto/deployment/checklist/
 
@@ -141,12 +142,12 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 
 MEDIA_ROOT = BASE_DIR / 'media'
-MEDIA_URL = 'media/'
+MEDIA_URL = '/media/'
 
-DEFAULT_FILE_STORAGE = {"default": {"BACKEND": "storages.backends.s3boto3.S3Boto3Storage"}}
+DEFAULT_FILE_STORAGE = 'storages.backends.s3boto3.S3Boto3Storage'
 
 AWS_ACCESS_KEY_ID = env('AWS_ACCESS_KEY_ID')
 AWS_SECRET_ACCESS_KEY = env('AWS_SECRET_ACCESS_KEY')
-AWS_STORGAE_BUCKET_NAME = env('AWS_STORGAE_BUCKET_NAME')
+AWS_STORAGE_BUCKET_NAME = env('AWS_STORGAE_BUCKET_NAME')
 AWS_S3_REGION_NAME = env('AWS_S3_REGION_NAME')
 
