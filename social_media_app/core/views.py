@@ -48,3 +48,7 @@ def login(request):
         error = 'Invalid username and/or password'
         return render(request, 'login.html', {'error_message': error})
     return render(request, 'login.html')
+
+def logout(request):
+    auth.logout(request)
+    return redirect('login')
