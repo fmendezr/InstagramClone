@@ -1,6 +1,7 @@
 from django.shortcuts import render, redirect
 from django.http import HttpResponse
 from django.contrib.auth.models import User
+from django.contrib import auth
 from . import models
 
 # Create your views here.
@@ -29,9 +30,21 @@ def signup(request):
             new_user.save()
             new_profile = models.Profile.objects.create(user=new_user, id_user=new_user.id)
             new_profile.save()
+            auth.login(new_user)
             return redirect('home')
         except: 
             error = 'Error during User creation'
             return render(request, 'signup.html', {'error_message': error})
     return render(request, 'signup.html')
-        
+    
+def login(request):
+    if request.method == "POST": 
+        username = request.POST['username']
+        password = request.POST['password']
+        user = auth.authenticate(request, username=username, password=password)
+        if user is not None:
+            auth.login(request, user)
+            return redirect('home')
+        error = 'Invalid username and/or password'
+        return render(request, 'login.html', {'error_message': error})
+    return render(request, 'login.html')

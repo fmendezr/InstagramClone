@@ -1,0 +1,33 @@
+{% extends 'base.html' %}
+
+{% block title %}Log in{% endblock%}
+
+{% block content %}
+    <main class='container d-flex align-items-center justify-content-center h-100'>
+        <div class='card' style='max-width: 280px'>
+            <div class='card-header d-inline-block'>
+                <h1 class='card-title text-center'>Instagram</h2>
+            </div>
+            <div class='card-body'>
+                {% if error_message %}
+                    <div class='alert alert-danger text-center' role='alert'>{{ error_message }}</div>
+                {% endif %}
+                <form method='post'>
+                    {% csrf_token %}
+                    <div class='form-floating'>
+                        <input type='text' class='form-control' id='username' name='username' placeholder='PatrickBateman' required/>
+                        <label for='username'>Username</label>
+                    </div>
+                    <div class='form-floating'>
+                        <input type='password' class='form-control' id='password' name='password' placeholder='jufi1231dsa3' required/>
+                        <label for='password1'>Password</label>
+                    </div>
+                    <div class="d-grid gap-2">
+                        <button class="btn btn-primary" type="submit">Log In</button>
+                    </div>
+                </form>
+            </div>
+            <div class='card-footer'><a href='{% url "signup" %}'>Don't have an Account? Sign Up</a></div>
+        </div>
+    </main>
+{% endblock %}  
