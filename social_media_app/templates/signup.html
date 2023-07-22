@@ -11,7 +11,7 @@
             </div>
             <div class='card-body'>
                 {% if error_message %}
-                    <div class='alert alert-danger' role='alert'>{{ error_message }}</div>
+                    <div class='alert alert-danger text-center' role='alert'>{{ error_message }}</div>
                 {% endif %}
                 <form method='post'>
                     {% csrf_token %}
@@ -48,7 +48,7 @@
                     </div>
                 </form>
             </div>
-            <div class='card-footer'><a>Already have an Account? Log in</a></div>
+            <div class='card-footer'><a href='{% url "login" %}'>Already have an Account? Log in</a></div>
         </div>
     </main>
 {% endblock %}  
