@@ -1,0 +1,50 @@
+{% load static %}
+<header>
+    <nav class="navbar navbar-expand-lg navbar-light bg-light">
+        <div class="container-fluid">
+          <a class="navbar-brand" href="#">
+            <img class='img-thumbnail' height='60' width='60' src='{{user_profile.profile_img.url}}' />
+          </a>
+          <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+          </button>
+          <div class="collapse navbar-collapse" id="navbarSupportedContent">
+            <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+              <li class="nav-item">
+                <a class="nav-link active" aria-current="page" href="#">Home</a>
+              </li>
+              <li class="nav-item dropdown">
+                <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                  Upload Post
+                </a>
+                <ul class='dropdown-menu' aria-labelledby='navbarDropdown'>
+                <form action='upload/' method='POST' enctype='multipart/form-data' class="p-3 d-flex flex-column" style='min-width: 250px'>
+                  {% csrf_token %}
+                  <li class='form-text align-self-center'>Upload Pics</li>
+                  <hr class="dropdown-divider">
+                  <img class='align-self-center mb-2 post-img-display' width="100" src='{% static "images/cloud-upload-log.svg" %}'/>
+                  <input class="form-control form-control-sm mb-3 post-img-input" accept='image/*' id="upload_image" name='upload_image' type="file" required>
+                  <textarea class='form-control' placeholder='Caption...' maxlength='280' name='caption' id='caption'></textarea>
+                  <hr class="dropdown-divider">
+                  <li class='form-text mb-2'>Your image size must be maximum 999MB</li>
+                  <button type="submit" class="btn btn-primary">Post</button>
+                </form>
+                </ul>
+              </li>
+            </ul>
+            <form class="d-flex">
+              <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search">
+              <button class="btn btn-outline-primary" type="submit">Search</button>
+            </form>
+          </div>
+        </div>
+      </nav>
+      <script>
+        const postImage = document.querySelector('.post-img-display')
+        const postImageInput = document.querySelector('.post-img-input')
+
+        postImageInput.addEventListener('change', () => {
+            postImage.src = URL.createObjectURL(postImageInput.files[0])
+        })
+      </script>
+</header>

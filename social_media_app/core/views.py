@@ -8,7 +8,21 @@ from . import models
 # Create your views here.
 @login_required(login_url='login/')
 def home(request):
-    return HttpResponse(request.user)
+    user_object = User.objects.get(username=request.user.username)
+    user_profile = models.Profile.objects.get(user=user_object)
+
+    return render(request, 'index.html', {'user_profile': user_profile})
+
+@login_required(login_url='login/')
+def upload(request):
+    if request.method == 'POST':
+        user_object = User.objects.get(username=request.user.username)
+        image = request.FILES.get('upload_image')
+        caption = request.POST['caption']
+        new_post = models.Post.objects.create(user=user_object, image=image, caption=caption)
+        new_post.save()
+        return redirect('/')
+    return redirect('/')
 
 @login_required(login_url='login/')
 def settings(request):
