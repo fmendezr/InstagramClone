@@ -7,8 +7,18 @@ from . import models
 
 # Create your views here.
 @login_required(login_url='login/')
-def home (request):
+def home(request):
     return HttpResponse(request.user)
+
+@login_required(login_url='login/')
+def settings(request):
+    user_profile = models.Profile.objects.get(user=request.user)
+    if request.method == 'POST':
+        user_profile.bio = request.POST['bio']
+        if request.FILES.get('image') != None:
+            user_profile.profile_img = request.FILES.get('image')
+        user_profile.save()
+    return render(request, 'settings.html', {'user_file': user_profile})
 
 def signup(request):
     if request.method == 'POST':
