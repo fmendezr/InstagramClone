@@ -3,7 +3,26 @@
 
 {% block content %}
     {% include 'partials/_header.html' %}
-    <main>
+    <main class='container m-auto mt-3 row'>
+        <div class='container main_feed col-sm-9 '>
+            {% for post in posts reversed %}
+                <div class='card mb-3'>
+                    <div class='card-header d-flex justify-content-between align-items-center'>
+                        <a class='profile_link' href='{% url "home" %}'><h5 class='card-title'>@{{ post.user.username }}</h5></a>
+                        <img class='more-btn' width='40' src='{% static "images/more-logo.svg" %}' />
+                    </div>
+                    <div class='card-body'>
+                        <img class='img-fluid mb-2' src='{{ post.image.url }}' />
+                        <div class='container d-flex justify-content-between'>
+                            <img class='like-btn icon' src='{% static "images/favourite.svg" %}' />
+                            <img class='download-btn icon' src='{% static "images/cloud_download.svg" %}'>
+                        </div>
+                        <p class='card-text'><a href='{% url "home" %}'><strong>{{ post.user.username }}</strong></a> {{ post.caption }}</p>
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+        <div class='col-3'>
+        </div>
     </main>
-    
 {% endblock %}
