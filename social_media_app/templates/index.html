@@ -24,7 +24,7 @@
                         {% else %}
                             <strong>{{ post.no_likes }} likes </strong>
                         {% endif %}
-                        <p class='card-text'><a href='{% url "home" %}'><strong>{{ post.user.username }}</strong></a> {{ post.caption }}</p>
+                        <p class='card-text'><a href='{% url "profile" post.user.username %}'><strong>{{ post.user.username }}</strong></a> {{ post.caption }}</p>
                     </div>
                 </div>
             {% endfor %}

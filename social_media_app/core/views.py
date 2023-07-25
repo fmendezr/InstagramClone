@@ -10,7 +10,10 @@ from . import models
 def home(request):
     user_object = User.objects.get(username=request.user.username)
     user_profile = models.Profile.objects.get(user=user_object)
-    posts =models.Post.objects.all()
+
+    user_following = [user.user for user in models.FollowerCount.objects.filter(follower=user_object)]
+    posts = models.Post.objects.filter(user__in=user_following)
+    
     return render(request, 'index.html', {'user_profile': user_profile, 'posts': posts, 'username': request.user.username})
 
 @login_required(login_url='login/')
