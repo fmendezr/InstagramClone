@@ -21,6 +21,6 @@ class Post (models.Model):
     created = models.DateTimeField(default=datetime.now)
     no_likes = models.IntegerField(default=0)
     
-    def __str__(self) -> str:
-        return self.user.username
-    
+class LikePost (models.Model):
+    post = models.ForeignKey(Post, on_delete=models.CASCADE)
+    user = models.ForeignKey(User, on_delete=models.CASCADE)

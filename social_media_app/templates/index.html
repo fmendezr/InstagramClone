@@ -14,9 +14,16 @@
                     <div class='card-body'>
                         <img class='img-fluid mb-2' src='{{ post.image.url }}' />
                         <div class='container d-flex justify-content-between'>
-                            <img class='like-btn icon' src='{% static "images/favourite.svg" %}' />
-                            <img class='download-btn icon' src='{% static "images/cloud_download.svg" %}'>
+                            <a href='{% url "like" post.id %}'><img class='like-btn icon' src='{% static "images/favourite_filled.svg" %}' /></a>
+                            <img class='download-btn icon' src='{% static "images/cloud_download_filled.svg" %}'>
                         </div>
+                        {% if post.no_likes == 0 %}
+                            <strong>Post has no likes</strong>
+                        {% elif post.no_likes == 1%}
+                            <strong>Liked by 1 person </strong>
+                        {% else %}
+                            <strong>{{ post.no_likes }} likes </strong>
+                        {% endif %}
                         <p class='card-text'><a href='{% url "home" %}'><strong>{{ post.user.username }}</strong></a> {{ post.caption }}</p>
                     </div>
                 </div>

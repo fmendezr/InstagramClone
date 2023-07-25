@@ -14,6 +14,22 @@ def home(request):
     return render(request, 'index.html', {'user_profile': user_profile, 'posts': posts})
 
 @login_required(login_url='login/')
+def like(request, postid):
+    post_id = postid
+    post = models.Post.objects.get(id=post_id)
+    likePost = models.LikePost.objects.filter(post=post, user=request.user)
+    if likePost.exists():
+        likePost.delete()
+        post.no_likes = post.no_likes -1
+        post.save()
+    else:
+        new_like = models.LikePost.objects.create(post=post, user=request.user)
+        new_like.save()
+        post.no_likes = post.no_likes + 1
+        post.save()
+    return redirect('/')
+
+@login_required(login_url='login/')
 def upload(request):
     if request.method == 'POST':
         user_object = User.objects.get(username=request.user.username)
