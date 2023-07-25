@@ -46,15 +46,39 @@ def profile(request, username):
     current_user = user == request.user
     profile = models.Profile.objects.get(user=user)
     posts = models.Post.objects.filter(user=user)
+    follower_count = len(models.FollowerCount.objects.filter(user=user))
+    following_count = len(models.FollowerCount.objects.filter(follower=user)) 
+    
+    if models.FollowerCount.objects.filter(user=user, follower=request.user).exists():
+        button_text = 'Unfollow'
+    else:
+        button_text = 'Follow'
+
     num_posts = len(posts)
     context = {
         "current_user": current_user,
         "user": user,
         "profile": profile,
         "posts": posts,
-        "num_posts": num_posts
+        "num_posts": num_posts,
+        'follower_count': follower_count,
+        'following_count': following_count,
+        'button_text': button_text,
     }
     return render(request, 'profile.html', context)
+
+@login_required(login_url='login/')
+def follow(request):
+    if request.method == 'POST':
+        user = User.objects.get(username=request.POST['user'])
+        follower = models.FollowerCount.objects.filter(user=user, follower=request.user)
+        if follower.exists():
+            follower.delete()
+        else:
+            new_follower = models.FollowerCount.objects.create(user=user, follower=request.user)
+            new_follower.save()
+        return redirect(f'/profile/{user.username}')
+    return redirect('/')
 
 @login_required(login_url='login/')
 def settings(request):
