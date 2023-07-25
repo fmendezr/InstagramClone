@@ -11,7 +11,7 @@ def home(request):
     user_object = User.objects.get(username=request.user.username)
     user_profile = models.Profile.objects.get(user=user_object)
     posts =models.Post.objects.all()
-    return render(request, 'index.html', {'user_profile': user_profile, 'posts': posts})
+    return render(request, 'index.html', {'user_profile': user_profile, 'posts': posts, 'username': request.user.username})
 
 @login_required(login_url='login/')
 def like(request, postid):
@@ -39,6 +39,22 @@ def upload(request):
         new_post.save()
         return redirect('/')
     return redirect('/')
+
+@login_required(login_url='login/')
+def profile(request, username):
+    user = User.objects.get(username=username)
+    current_user = user == request.user
+    profile = models.Profile.objects.get(user=user)
+    posts = models.Post.objects.filter(user=user)
+    num_posts = len(posts)
+    context = {
+        "current_user": current_user,
+        "user": user,
+        "profile": profile,
+        "posts": posts,
+        "num_posts": num_posts
+    }
+    return render(request, 'profile.html', context)
 
 @login_required(login_url='login/')
 def settings(request):
