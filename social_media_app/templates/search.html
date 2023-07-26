@@ -3,5 +3,18 @@
 {% block title %} User Search {% endblock %}
 
 {% block content %}
-
+    {% include 'partials/_header.html' %}
+    <main class='container m-auto mt-3'>
+        {% for profile in profiles_found %}
+        <a href='{% url "profile" profile.user.username %}' class='user_preview'>
+            <div class='row container-fluid p-0 mb-3'>
+                <img class='col m-0' src='{{ profile.profile_img.url }}' style="max-width: 100px"/>
+                <div class='col'>
+                    <h4>@{{profile.user.username}}</h4>
+                    <p>{{ profile.bio }}</p>
+                </div>
+            </div>
+        </a>
+        {% endfor %}
+    </main>
 {% endblock %}

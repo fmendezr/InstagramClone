@@ -44,6 +44,19 @@ def upload(request):
     return redirect('/')
 
 @login_required(login_url='login/')
+def search(request):
+    profile = models.Profile.objects.get(user=request.user)
+    context = {'user_profile': profile, 'username': request.user.username}
+    if request.method == 'POST':
+        username = request.POST['user_search']
+        user_results = User.objects.filter(username__contains=username)
+        user_list = [ user for user in user_results]
+        profile_results = models.Profile.objects.filter(user__in=user_list)
+        context['profiles_found'] = profile_results
+        return render(request, 'search.html', context)
+    return render(request, 'search.html', context)
+
+@login_required(login_url='login/')
 def profile(request, username):
     user = User.objects.get(username=username)
     current_user = user == request.user
