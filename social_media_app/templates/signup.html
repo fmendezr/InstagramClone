@@ -3,8 +3,8 @@
 {% block title %}Sign Up{% endblock%}
 
 {% block content %}
-    <main class='container d-flex align-items-center justify-content-center h-100'>
-        <div class='card' style='max-width: 280px'>
+    <main class='container d-flex align-items-center justify-content-center h-150'>
+        <div class='card mt-3 mb-3' style='max-width: 280px'>
             <div class='card-header d-inline-block'>
                 <h1 class='card-title text-center'>Instagram</h2>
                 <h6 class='card-subtitle text-center'>Sign up to see photos and videos of your friends</h4>
@@ -15,31 +15,31 @@
                 {% endif %}
                 <form method='post'>
                     {% csrf_token %}
-                    <div class='form-floating'>
+                    <div class='form-floating mb-3'>
                         <input type='email' class='form-control' id='email' name='email' placeholder='pbateman@gmail.com' required/>
                         <label for='email'>Email</label>
                     </div>
-                    <div class='form-floating'>
+                    <div class='form-floating mb-3'>
                         <input type='text' class='form-control' id='first_name' name='first_name' placeholder='Patrick' required/>
                         <label for='first_name'>First Name</label>
                     </div>
-                    <div class='form-floating'>
+                    <div class='form-floating mb-3'>
                         <input type='text' class='form-control' id='last_name' name='last_name' placeholder='Bateman' required/>
                         <label for='last_name'>Last Name</label>
                     </div>
-                    <div class='form-floating'>
+                    <div class='form-floating mb-3'>
                         <input type='text' class='form-control' id='username' name='username' placeholder='PatrickBateman' required/>
                         <label for='username'>Username</label>
                     </div>
-                    <div class='form-floating'>
+                    <div class='form-floating mb-3'>
                         <input type='password' class='form-control' id='password1' name='password1' placeholder='jufi1231dsa3' required/>
                         <label for='password1'>Password</label>
                     </div>
-                    <div class='form-floating'>
+                    <div class='form-floating mb-3'>
                         <input type='password' class='form-control' id='password2' name='password2' placeholder='jufi1231dsa3' required/>
                         <label for='password2'>Confirm Password</label>
                     </div>
-                    <div class="form-check form-switch">
+                    <div class="form-check form-switch mb-3">
                         <input class="form-check-input" type="checkbox" id="terms_conditions">
                         <label class="form-check-label" for="terms_conditions">Agree to terms and conditions</label>
                     </div>
