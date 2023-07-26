@@ -4,6 +4,7 @@ from django.contrib.auth.models import User
 from django.contrib.auth.decorators import login_required
 from django.contrib import auth
 from . import models
+from random import randint
 
 # Create your views here.
 @login_required(login_url='login/')
@@ -13,8 +14,10 @@ def home(request):
 
     user_following = [user.user for user in models.FollowerCount.objects.filter(follower=user_object)]
     posts = models.Post.objects.filter(user__in=user_following)
-    
-    return render(request, 'index.html', {'user_profile': user_profile, 'posts': posts, 'username': request.user.username})
+
+    suggested_users = models.Profile.objects.exclude(user__in=user_following).exclude(user=user_object)
+    size_s_u = len(suggested_users)
+    return render(request, 'index.html', {'user_profile': user_profile, 'posts': posts, 'username': request.user.username, 'suggested_users': suggested_users[: 5 if size_s_u >= 5 else size_s_u]})
 
 @login_required(login_url='login/')
 def like(request, postid):
