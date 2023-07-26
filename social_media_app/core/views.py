@@ -75,9 +75,10 @@ def profile(request, username):
 
     num_posts = len(posts)
     context = {
+        "username": username,
         "current_user": current_user,
         "user": user,
-        "profile": profile,
+        "user_profile": profile,
         "posts": posts,
         "num_posts": num_posts,
         'follower_count': follower_count,
@@ -107,7 +108,7 @@ def settings(request):
         if request.FILES.get('image') != None:
             user_profile.profile_img = request.FILES.get('image')
         user_profile.save()
-    return render(request, 'settings.html', {'user_file': user_profile})
+    return render(request, 'settings.html', {'user_profile': user_profile, "username": user_profile.user.username})
 
 def signup(request):
     if request.method == 'POST':
