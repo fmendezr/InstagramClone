@@ -13,7 +13,7 @@ def home(request):
     user_profile = models.Profile.objects.get(user=user_object)
 
     user_following = [user.user for user in models.FollowerCount.objects.filter(follower=user_object)]
-    posts = models.Post.objects.filter(user__in=user_following)
+    posts = models.Post.objects.filter(user__in=user_following).order_by('-created')
 
     suggested_users = models.Profile.objects.exclude(user__in=user_following).exclude(user=user_object)
     size_s_u = len(suggested_users)
@@ -43,7 +43,7 @@ def upload(request):
         caption = request.POST['caption']
         new_post = models.Post.objects.create(user=user_object, image=image, caption=caption)
         new_post.save()
-        return redirect('/')
+        return redirect(f'/profile/{request.user.username}')
     return redirect('/')
 
 @login_required(login_url='login/')
@@ -65,7 +65,7 @@ def profile(request, username):
     current_user = user == request.user
     current_profile = models.Profile.objects.get(user=request.user)
     profile = models.Profile.objects.get(user=user)
-    posts = models.Post.objects.filter(user=user)
+    posts = models.Post.objects.filter(user=user).order_by('-created')
     follower_count = len(models.FollowerCount.objects.filter(user=user))
     following_count = len(models.FollowerCount.objects.filter(follower=user)) 
     

@@ -13,17 +13,17 @@
                     <div class="modal-dialog">
                       <div class="modal-content">
                         <div class="modal-header">
-                            <a class='profile_link' href='{% url "profile" post.post.user.username %}' style='text-decoration: none'><h5 class="modal-title" id="exampleModalLabel">@{{post.user.username}}</h5></a>
+                            <a class='profile_link' href='{% url "profile" post.post.user.username %}' style='text-decoration: none'><h5 class="modal-title" id="exampleModalLabel">@{{post.post.user.username}}</h5></a>
                             <!-- <img class='more-btn' width='40' src='{% static "images/more-logo.svg" %}' /> -->
                           <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                         </div>
                         <div class="modal-body">
                             <img src='{{ post.post.image.url }}' class='img-fluid w-100'>
-                            <p class='card-text'><a href='{% url "profile" post.user.username %}' style='text-decoration: none'><strong>{{ post.user.username }}</strong></a> {{ post.caption }}</p>
+                            <p class='card-text'><a href='{% url "profile" post.post.user.username %}' style='text-decoration: none'><strong>{{ post.post.user.username }}</strong></a> {{ post.post.caption }}</p>
                         </div>
                         <div class="modal-footer">
                           <form action='{% url "save" post.post.id %}'><button type='submit' class="btn btn-primary">Unsave</button></form
-                            {% if post.user.username == username  %}
+                            {% if post.post.user.username == username  %}
                                 <form action='{% url "delete_post" post.post.id %}' method='POST'>{% csrf_token %}<button type="submit" class="btn btn-danger">Delete Post</button></form>
                             {% endif %}
                         </div>

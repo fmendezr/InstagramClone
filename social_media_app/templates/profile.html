@@ -42,8 +42,8 @@
             <p>{{ profile.bio }}</p>
         </div>
         <div class='row row-cols-3'>
-            {% for post in posts reversed %}
-                <img src='{{ post.image.url }}' width='275' height='300' data-bs-toggle="modal" data-bs-target="#bruh{{post.id}}"/>
+            {% for post in posts %}
+                <img src='{{ post.image.url }}' width='vw-30' height='vw-30' data-bs-toggle="modal" data-bs-target="#bruh{{post.id}}" class='mb-4'/>
                 <div class="modal fade" id="bruh{{post.id}}" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
                     <div class="modal-dialog">
                       <div class="modal-content">
@@ -54,7 +54,7 @@
                         </div>
                         <div class="modal-body">
                             <img src='{{ post.image.url }}' class='img-fluid w-100'>
-                            <p class='card-text'><a href='{% url "profile" post.user.username %}' style='text-decoration: none'><strong>{{ post.user.username }}</strong></a> {{ post.caption }}</p>
+                            <p class='card-text mt-3'><a href='{% url "profile" post.user.username %}' style='text-decoration: none'><strong>{{ post.user.username }}</strong></a> {{ post.caption }}</p>
                         </div>
                         <div class="modal-footer">
                           <button type="button" class="btn btn-primary" data-bs-dismiss="modal">Close</button>

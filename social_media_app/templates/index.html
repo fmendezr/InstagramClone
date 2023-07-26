@@ -6,7 +6,7 @@
     {% include 'partials/_header.html' %}
     <main class='container m-auto mt-3 row'>
         <div class='container main_feed col-sm-8 '>
-            {% for post in posts reversed %}
+            {% for post in posts %}
                 <div class='card mb-3'>
                     <div class='card-header d-flex justify-content-between align-items-center'>
                         <a class='profile_link' href='{% url "profile" post.user.username %}' style='text-decoration: none'><h5 class='card-title'>@{{ post.user.username }}</h5></a>
@@ -34,7 +34,6 @@
             <div class='card'>
                 <div class='card-header d-flex justify-content-between align-items-center'>
                     <h6 class='card-title'>Suggested Users</h6>
-                    <button type="button" class="btn btn-primary">Refresh</button>
                 </div>
                 <div class='card-body container-fluid'>
                     {% for user in  suggested_users %}
