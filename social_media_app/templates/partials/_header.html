@@ -18,7 +18,7 @@
                   Upload Post
                 </a>
                 <ul class='dropdown-menu' aria-labelledby='navbarDropdown'>
-                <form action='upload/' method='POST' enctype='multipart/form-data' class="p-3 d-flex flex-column" style='min-width: 250px'>
+                <form action='{% url "upload" %}' method='POST' enctype='multipart/form-data' class="p-3 d-flex flex-column" style='min-width: 250px'>
                   {% csrf_token %}
                   <li class='form-text align-self-center'>Upload Pics</li>
                   <hr class="dropdown-divider">

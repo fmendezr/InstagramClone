@@ -10,13 +10,13 @@
                 <div class='card mb-3'>
                     <div class='card-header d-flex justify-content-between align-items-center'>
                         <a class='profile_link' href='{% url "profile" post.user.username %}' style='text-decoration: none'><h5 class='card-title'>@{{ post.user.username }}</h5></a>
-                        <img class='more-btn' width='40' src='{% static "images/more-logo.svg" %}' />
+                        <!-- <img class='more-btn' width='40' src='{% static "images/more-logo.svg" %}' /> -->
                     </div>
                     <div class='card-body'>
                         <img class='img-fluid mb-2' src='{{ post.image.url }}' />
                         <div class='container d-flex justify-content-between'>
                             <a href='{% url "like" post.id %}'><img class='like-btn icon' src='{% static "images/favourite_filled.svg" %}' /></a>
-                            <img class='download-btn icon' src='{% static "images/cloud_download_filled.svg" %}'>
+                            <!-- <img class='download-btn icon' src='{% static "images/cloud_download_filled.svg" %}'> -->
                         </div>
                         {% if post.no_likes == 0 %}
                             <strong>Post has no likes</strong>
