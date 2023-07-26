@@ -6,12 +6,12 @@
     {% include 'partials/_header.html' %}
     <main class='container m-auto mt-3'>
         {% for profile in profiles_found %}
-        <a href='{% url "profile" profile.user.username %}' class='user_preview'>
+        <a href='{% url "profile" profile.user.username %}' class='user_preview' style='text-decoration: none'>
             <div class='row container-fluid p-0 mb-3'>
-                <img class='col m-0' src='{{ profile.profile_img.url }}' style="max-width: 100px"/>
+                <img class='col m-0' src='{{ profile.profile_img.url }}' style="max-width: 125px"/>
                 <div class='col'>
                     <h4>@{{profile.user.username}}</h4>
-                    <p>{{ profile.bio }}</p>
+                    <p style='text-overflow: elipsis'>{{ profile.bio }}</p>
                 </div>
             </div>
         </a>
