@@ -16,7 +16,7 @@
                         <img class='img-fluid mb-2' src='{{ post.image.url }}' />
                         <div class='container d-flex justify-content-between'>
                             <a href='{% url "like" post.id %}'><img class='like-btn icon' src='{% static "images/favourite_filled.svg" %}' /></a>
-                            <!-- <img class='download-btn icon' src='{% static "images/cloud_download_filled.svg" %}'> -->
+                            <a href='{% url "save" post.id %}'><img class='download-btn icon' src='{% static "images/cloud_download_filled.svg" %}'> </a>
                         </div>
                         {% if post.no_likes == 0 %}
                             <strong>Post has no likes</strong>

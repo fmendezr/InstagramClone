@@ -117,6 +117,23 @@ def settings(request):
         user_profile.save()
     return render(request, 'settings.html', {'user_profile': user_profile, "username": user_profile.user.username})
 
+@login_required(login_url='login/')
+def saved_posts(request):
+    profile = models.Profile.objects.get(user=request.user)
+    posts = models.SavePost.objects.filter(user=request.user)
+    return render(request, 'saved_posts.html', {'user_profile': profile, 'username': request.user.username, 'posts': posts})
+
+@login_required(login_url='login/')
+def save(request, postid):
+    post = models.Post.objects.get(id=postid)
+    save_post = models.SavePost.objects.filter(post=post)
+    if save_post.exists():
+        save_post.delete()
+    else:
+        save_post = models.SavePost.objects.create(post=post, user=request.user)
+        save_post.save()
+    return redirect('/saved-posts/')
+
 def signup(request):
     if request.method == 'POST':
         email = request.POST['email']
