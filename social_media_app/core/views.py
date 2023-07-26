@@ -63,6 +63,7 @@ def search(request):
 def profile(request, username):
     user = User.objects.get(username=username)
     current_user = user == request.user
+    current_profile = models.Profile.objects.get(user=request.user)
     profile = models.Profile.objects.get(user=user)
     posts = models.Post.objects.filter(user=user)
     follower_count = len(models.FollowerCount.objects.filter(user=user))
@@ -75,10 +76,11 @@ def profile(request, username):
 
     num_posts = len(posts)
     context = {
-        "username": username,
+        "username": request.user.username,
+        "user_profile": current_profile,
         "current_user": current_user,
         "user": user,
-        "user_profile": profile,
+        "profile": profile,
         "posts": posts,
         "num_posts": num_posts,
         'follower_count': follower_count,
@@ -156,11 +158,15 @@ def signup(request):
             new_user.save()
             new_profile = models.Profile.objects.create(user=new_user, id_user=new_user.id)
             new_profile.save()
-            auth.login(new_user)
-            return redirect('home')
         except: 
             error = 'Error during User creation'
             return render(request, 'signup.html', {'error_message': error})
+        try: 
+            auth.login(request, new_user)
+            return redirect('home')
+        except:
+            error = "Account Created Succesfully"
+            return render(request, 'login.html', {'error_message': error} )
     return render(request, 'signup.html')
     
 def login(request):
