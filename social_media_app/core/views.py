@@ -74,8 +74,10 @@ def profile(request, username):
     current_profile = models.Profile.objects.get(user=request.user)
     profile = models.Profile.objects.get(user=user)
     posts = models.Post.objects.filter(user=user).order_by('-created')
-    follower_count = len(models.FollowerCount.objects.filter(user=user))
-    following_count = len(models.FollowerCount.objects.filter(follower=user)) 
+    followers = models.FollowerCount.objects.filter(user=user)
+    following = models.FollowerCount.objects.filter(follower=user)
+    follower_count = len(followers)
+    following_count = len(following) 
     
     if models.FollowerCount.objects.filter(user=user, follower=request.user).exists():
         button_text = 'Unfollow'
@@ -91,6 +93,8 @@ def profile(request, username):
         "profile": profile,
         "posts": posts,
         "num_posts": num_posts,
+        'followers' : followers,
+        'following': following,
         'follower_count': follower_count,
         'following_count': following_count,
         'button_text': button_text,
