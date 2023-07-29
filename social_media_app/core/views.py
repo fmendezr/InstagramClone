@@ -1,10 +1,9 @@
 from django.shortcuts import render, redirect
-from django.http import HttpResponse
+from django.http import HttpResponse, JsonResponse
 from django.contrib.auth.models import User
 from django.contrib.auth.decorators import login_required
 from django.contrib import auth
 from . import models
-from random import randint
 
 # Create your views here.
 @login_required(login_url='login/')
@@ -28,13 +27,14 @@ def like(request, postid):
         likePost.delete()
         post.no_likes = post.no_likes -1
         post.save()
+        return JsonResponse({'action' : 'unliked', 'n_likes': post.no_likes})
     else:
         new_like = models.LikePost.objects.create(post=post, user=request.user)
         new_like.save()
         post.no_likes = post.no_likes + 1
         post.save()
-    return redirect('/')
-
+        return JsonResponse({'action' : 'liked', 'n_likes': post.no_likes})
+    
 @login_required(login_url='login/')
 def upload(request):
     if request.method == 'POST':
@@ -131,10 +131,12 @@ def save(request, postid):
     save_post = models.SavePost.objects.filter(post=post)
     if save_post.exists():
         save_post.delete()
+        return JsonResponse({'action': 'unsaved'})
     else:
         save_post = models.SavePost.objects.create(post=post, user=request.user)
         save_post.save()
-    return redirect('/saved-posts/')
+        return JsonResponse({'action': 'saved'})
+
 
 def signup(request):
     if request.method == 'POST':

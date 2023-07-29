@@ -15,19 +15,53 @@
                     <div class='card-body'>
                         <img class='img-fluid mb-2' src='{{ post.image.url }}' />
                         <div class='container d-flex justify-content-between'>
-                            <a href='{% url "like" post.id %}'><img class='like-btn icon' src='{% static "images/favourite_filled.svg" %}' /></a>
-                            <a href='{% url "save" post.id %}'><img class='download-btn icon' src='{% static "images/cloud_download_filled.svg" %}'> </a>
+                            <img id='m{{ post.id }}' class='like-btn icon' src='{% static "images/favourite_filled.svg" %}'/>
+                            <img id='a{{ post.id }}' class='download-btn icon' src='{% static "images/cloud_download_filled.svg" %}'/>
                         </div>
                         {% if post.no_likes == 0 %}
-                            <strong>Post has no likes</strong>
+                            <strong id='b{{ post.id }}'>Post has no likes</strong>
                         {% elif post.no_likes == 1%}
-                            <strong>Liked by 1 person </strong>
+                            <strong id='b{{ post.id }}'>Liked by 1 person </strong>
                         {% else %}
-                            <strong>{{ post.no_likes }} likes </strong>
+                            <strong id='b{{ post.id }}'>{{ post.no_likes }} likes </strong>
                         {% endif %}
                         <p class='card-text'><a href='{% url "profile" post.user.username %}' style='text-decoration: none'><strong>{{ post.user.username }}</strong></a> {{ post.caption }}</p>
                     </div>
                 </div>
+                <script>
+                    document.querySelector('img#m{{ post.id }}').addEventListener('click', () => {
+                        fetch(`{% url "like" post.id %}`)
+                        .then(response => {
+                            return response.json();
+                        })
+                        .then(data => {
+                            if (data['action'] === 'liked'){
+                                n_likes = data['n_likes']
+                                document.querySelector('strong#b{{ post.id }}').innerHTML = n_likes === 0 ? '0 likes' : n_likes === 1 ? 'Liked by 1 person' : n_likes + " likes" ;
+                                document.querySelector('img#m{{ post.id }}').src = "{% static 'images/favourite_filled.svg' %}";
+                            }
+                            else if (data['action'] == 'unliked'){
+                                n_likes = data['n_likes']
+                                document.querySelector('strong#b{{ post.id }}').innerHTML = n_likes === 0 ? '0 likes' : n_likes === 1 ? 'Liked by 1 person' : n_likes + " likes" ;
+                                document.querySelector('img#m{{ post.id }}').src = "{% static 'images/favourite.svg' %}";
+                            }
+                        })
+                    });
+                    document.querySelector('img#a{{ post.id }}').addEventListener('click', () => {
+                        fetch(`{% url "save" post.id %}`)
+                        .then(response => {
+                            return response.json();
+                        })
+                        .then(data => {
+                            if (data['action'] === 'saved'){
+                                document.querySelector('img#a{{ post.id }}').src = '{% static "images/cloud_download_filled.svg" %}';
+                            }
+                            else if (data['action'] == 'unsaved'){
+                                document.querySelector('img#a{{ post.id }}').src = '{% static "images/cloud_download.svg" %}';
+                            }
+                        })
+                    });                       
+                </script>
             {% endfor %}
         </div>
         <div class='col-4'>
