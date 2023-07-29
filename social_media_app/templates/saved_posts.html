@@ -20,7 +20,7 @@
                         <div class="modal-body">
                             <img src='{{ post.post.image.url }}' class='img-fluid w-100'>
                             <div class='container d-flex justify-content-between'>
-                              <img id='m{{ post.post.id }}' class='like-btn icon' src='{% static "images/favourite_filled.svg" %}'/>
+                              <img id='m{{ post.post.id }}' class='like-btn icon' src='{% static "images/favourite.svg" %}'/>
                               <img id='a{{ post.post.id }}' class='download-btn icon' src='{% static "images/cloud_download_filled.svg" %}'/>
                           </div>
                           {% if post.post.no_likes == 0 %}
@@ -42,6 +42,15 @@
                     </div>
                 </div>
                 <script>
+                  fetch('{% url "is_liked" post.post.id %}')
+                    .then(response => {
+                        return response.json();
+                    })
+                    .then(data => {
+                        if (data['liked'] === 'yes'){
+                            document.querySelector('img#m{{ post.post.id }}').src = "{% static 'images/favourite_filled.svg' %}";
+                        }
+                    });
                   document.querySelector('img#m{{ post.post.id }}').addEventListener('click', () => {
                       fetch(`{% url "like" post.post.id %}`)
                       .then(response => {

@@ -34,6 +34,14 @@ def like(request, postid):
         post.no_likes = post.no_likes + 1
         post.save()
         return JsonResponse({'action' : 'liked', 'n_likes': post.no_likes})
+
+@login_required(login_url='login')
+def is_liked(request, postid):
+    if models.LikePost.objects.filter(post__id=postid, user=request.user).exists():
+        return JsonResponse({'liked': "yes"})
+    else:
+        return JsonResponse({'liked': "no"})
+
     
 @login_required(login_url='login/')
 def upload(request):
@@ -136,6 +144,13 @@ def save(request, postid):
         save_post = models.SavePost.objects.create(post=post, user=request.user)
         save_post.save()
         return JsonResponse({'action': 'saved'})
+
+@login_required(login_url='login')
+def is_saved(request, postid):
+    if models.SavePost.objects.filter(post__id=postid, user=request.user).exists():
+        return JsonResponse({'liked': "yes"})
+    else:
+        return JsonResponse({'liked': "no"})
 
 
 def signup(request):

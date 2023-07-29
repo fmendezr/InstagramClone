@@ -55,8 +55,8 @@
                         <div class="modal-body">
                             <img src='{{ post.image.url }}' class='img-fluid w-100'>
                             <div class='container d-flex justify-content-between'>
-                                <img id='m{{ post.id }}' class='like-btn icon' src='{% static "images/favourite_filled.svg" %}'/>
-                                <img id='a{{ post.id }}' class='download-btn icon' src='{% static "images/cloud_download_filled.svg" %}'/>
+                                <img id='m{{ post.id }}' class='like-btn icon' src='{% static "images/favourite.svg" %}'/>
+                                <img id='a{{ post.id }}' class='download-btn icon' src='{% static "images/cloud_download.svg" %}'/>
                             </div>
                             {% if post.no_likes == 0 %}
                                 <strong id='b{{ post.id }}'>Post has no likes</strong>
@@ -77,6 +77,24 @@
                     </div>
                 </div>
                 <script>
+                    fetch('{% url "is_liked" post.id %}')
+                    .then(response => {
+                        return response.json();
+                    })
+                    .then(data => {
+                        if (data['liked'] === 'yes'){
+                            document.querySelector('img#m{{ post.id }}').src = "{% static 'images/favourite_filled.svg' %}";
+                        }
+                    });
+                    fetch('{% url "is_saved" post.id %}')
+                    .then(response => {
+                        return response.json();
+                    })
+                    .then(data => {
+                        if (data['liked'] === 'yes'){
+                            document.querySelector('img#a{{ post.id }}').src = '{% static "images/cloud_download_filled.svg" %}';
+                        }
+                    });
                     document.querySelector('img#m{{ post.id }}').addEventListener('click', () => {
                         fetch(`{% url "like" post.id %}`)
                         .then(response => {
