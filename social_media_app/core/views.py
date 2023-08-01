@@ -114,6 +114,13 @@ def follow(request):
         return redirect(f'/profile/{user.username}')
     return redirect('/')
 
+@login_required(login_url=('login/'))
+def remove(request, username):
+    user = User.objects.get(username=username)
+    follower = models.FollowerCount.objects.filter(user=request.user, follower=user)
+    follower.delete()
+    return HttpResponse(200)
+
 @login_required(login_url='login/')
 def delete_post(request, postid):
     if request.method == 'POST':
