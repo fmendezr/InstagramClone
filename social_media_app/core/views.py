@@ -102,17 +102,18 @@ def profile(request, username):
     return render(request, 'profile.html', context)
 
 @login_required(login_url='login/')
-def follow(request):
-    if request.method == 'POST':
-        user = User.objects.get(username=request.POST['user'])
-        follower = models.FollowerCount.objects.filter(user=user, follower=request.user)
-        if follower.exists():
-            follower.delete()
-        else:
-            new_follower = models.FollowerCount.objects.create(user=user, follower=request.user)
-            new_follower.save()
-        return redirect(f'/profile/{user.username}')
-    return redirect('/')
+def follow(request, username):
+    user = User.objects.get(username=username)
+    follower = models.FollowerCount.objects.filter(user=user, follower=request.user)
+    if follower.exists():
+        follower.delete()
+        return JsonResponse({'action': 'unfollow'})
+    else:
+        new_follower = models.FollowerCount.objects.create(user=user, follower=request.user)
+        new_follower.save()
+        return JsonResponse({'action': 'follow'})
+    return HttpResponse(400)
+   
 
 @login_required(login_url=('login/'))
 def remove(request, username):

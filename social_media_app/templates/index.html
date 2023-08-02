@@ -89,13 +89,30 @@
                 </div>
                 <div class='card-body container-fluid'>
                     {% for user in  suggested_users %}
-                    <a href='{% url "profile" user.user.username %}' style='text-decoration: none'>
-                    <div class='row d-flex align-items-center'>
+                    <div class='row mb-3'>
+                        <a href='{% url "profile" user.user.username %}' class='row col d-flex align-items-center' style='text-decoration: none'>
                         <img class='col' src='{{ user.profile_img.url }}' style='max-width: 60px;'/>
                         <p class='col'>{{ user.user.username }}</p>
-                        <form class='col' action='follow/' method='POST'>{% csrf_token %}<input type='hidden' value='{{ user.user.username }}' name='user' id='user'/><button class='btn btn-primary' type='submit'>Follow</button></form>
+                        </a>
+                        <button class=' col btn btn-primary' type='button' id='fafs{{user.user.username}}'>Follow</button>
                     </div>
-                    </a>
+                    <script>
+                        document.querySelector('#fafs{{user.user.username}}').addEventListener('click', () => {
+                            fetch(`{%url 'follow' user.user.username %}`)
+                            .then(response => {
+                                return response.json();
+                            })
+                            .then(data => {
+                                if (data['action'] === 'unfollow'){
+                                    document.querySelector('#fafs{{user.user.username}}').innerHTML = 'Follow';
+                                    document.querySelector('#fafs{{user.user.username}}').className = 'btn btn-primary col';
+                                } else if (data['action'] === 'follow'){
+                                    document.querySelector('#fafs{{user.user.username}}').innerHTML = 'Unfollow';
+                                    document.querySelector('#fafs{{user.user.username}}').className = 'btn btn-outline-primary col';
+                                }
+                            })
+                        })
+                    </script>
                     {% endfor %}
                 </div>
             </div>

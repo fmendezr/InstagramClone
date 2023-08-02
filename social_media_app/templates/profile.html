@@ -23,18 +23,16 @@
                         <p class='profile-info'>Followers</p>
                     </div>
                     <div class='d-flex flex-column text-center' data-bs-toggle="modal" data-bs-target="#following-modal">
-                        <strong class='profile-info'>{{ following_count }}</strong>
+                        <strong class='profile-info' id='following_count'>{{ following_count }}</strong>
                         <p class='profile-info'>Following</p>
                     </div>
                 </div>
                 {% if current_user %}
                    <a href='{% url "settings" %}' class='d-grid'><button class="btn btn-primary" type="button">Settings</button></a>
+                {% elif button_text == 'Unfollow' %}
+                    <button class='btn btn-outline-primary' type='button' id='follow-btn'>{{ button_text }}</button>
                 {% else %}
-                    <form action='/follow/' method='POST' class='d-grid'>
-                        {% csrf_token %}
-                        <input type='hidden' value='{{ user.username }}' name='user' id='user' />
-                        <button class='btn btn-primary' type='submit'>{{ button_text }}</button>
-                    </form>
+                    <button class='btn btn-primary' type='button' id='follow-btn'>{{ button_text }}</button>
                 {% endif %}            
             </div>
         </div>
@@ -138,19 +136,37 @@
                   <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body container pb-0">
-                    {% for user in following %}
-                        <div class='row mb-3 d-flex align-items-center'  >
-                            <a class='col' style='text-decoration: none' href='{% url "profile" user.user.username %}'><h5>@{{user.user.username}}</h5></a>
-                            {% if current_user %}
-                                <button id='gg{{user.user.username}}'type="button" class="btn btn-primary col">Unfollow</button>
-                                <script>
-                                    document.querySelector('#gg{{user.user.username}}').addEventListener('click', e => {
-                                        e.stopPropagation()
-                                    })
-                                </script>
-                            {% endif %}
-                        </div>
-                    {% endfor %}
+                    {%if following|length == 0 %}
+                        <h6 style='color: #007bff' class='row justify-content-center'>Not Following Users :(</h6>
+                    {% else %}
+                        {% for user in following %}
+                            <div class='row mb-3 d-flex align-items-center'  >
+                                <a class='col' style='text-decoration: none' href='{% url "profile" user.user.username %}'><h5>@{{user.user.username}}</h5></a>
+                                {% if current_user %}
+                                    <button id='gg{{user.user.username}}'type="button" class="btn btn-outline-primary col">Unfollow</button>
+                                    <script>
+                                        document.querySelector('#gg{{user.user.username}}').addEventListener('click', () => {
+                                            fetch(`{%url 'follow' user.user.username %}`)
+                                            .then(response => {
+                                                return response.json()
+                                            })
+                                            .then(data => {
+                                                if (data['action'] === 'unfollow'){
+                                                    document.querySelector('#gg{{user.user.username}}').innerHTML = 'Follow';
+                                                    document.querySelector('#gg{{user.user.username}}').className = 'btn btn-primary col';
+                                                    document.querySelector('#following_count').innerHTML = Number(document.querySelector('#following_count').innerHTML) - 1;
+                                                } else if (data['action'] === 'follow'){
+                                                    document.querySelector('#gg{{user.user.username}}').innerHTML = 'Unfollow';
+                                                    document.querySelector('#gg{{user.user.username}}').className = 'btn btn-outline-primary col';
+                                                    document.querySelector('#following_count').innerHTML = Number(document.querySelector('#following_count').innerHTML) + 1;
+                                                }
+                                            })
+                                        })
+                                    </script>
+                                {% endif %}
+                            </div>
+                        {% endfor %}
+                    {% endif%}
                 </div>
                 <div class="modal-footer">
                   <!--<button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>-->
@@ -167,7 +183,7 @@
                   <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body container pb-0">
-                    {% if user|length == 0 %}
+                    {% if followers|length == 0 %}
                         <h6 style='color: #007bff' class='row justify-content-center'>No Followers :(</h6>
                     {% else %}
                         {% for user in followers %}
@@ -175,20 +191,20 @@
                                 <a class='col align-items-center' style='text-decoration: none' href='{% url "profile" user.follower.username %}'><h5>@{{user.follower.username}}</h5></a>
                                 {% if current_user %}
                                     <button type="button" class="col btn btn-primary col" id='hg{{user.follower.username}}'>Remove</button>
+                                    <script>
+                                        document.querySelector('#hg{{user.follower.username}}').addEventListener('click', () => {
+                                            fetch(`{% url 'remove' user.follower.username %}`)
+                                            .then(response => {
+                                                if (response.status === 200){
+                                                    document.querySelector('#hg{{user.follower.username}}').innerHTML = 'Removed';
+                                                    document.querySelector('#hg{{user.follower.username}}').disabled = true;
+                                                    document.querySelector('#follower_count').innerHTML = Number(document.querySelector('#follower_count').innerHTML) - 1;
+                                                }
+                                            })
+                                        });
+                                    </script>
                                 {% endif %}
                             </div>
-                            <script>
-                                document.querySelector('#hg{{user.follower.username}}').addEventListener('click', () => {
-                                    fetch(`{% url 'remove' user.follower.username %}`)
-                                    .then(response => {
-                                        if (response.status === 200){
-                                            document.querySelector('#hg{{user.follower.username}}').innerHTML = 'Removed';
-                                            document.querySelector('#hg{{user.follower.username}}').disabled = true;
-                                            document.querySelector('#follower_count').innerHTML = Number(document.querySelector('#follower_count').innerHTML) - 1 
-                                        }
-                                    })
-                                });
-                            </script>
                         {% endfor %}
                     {% endif %}
                 </div>
@@ -200,4 +216,23 @@
             </div>
           </div>
     </main>
+    <script>
+        document.querySelector('#follow-btn').addEventListener('click', () => {
+            fetch(`{%url 'follow' user.username %}`)
+            .then(response => {
+                return response.json()
+            })
+            .then(data => {
+                if (data['action'] === 'unfollow'){
+                    document.querySelector('#follow-btn').innerHTML = 'Follow';
+                    document.querySelector('#follower_count').innerHTML = Number(document.querySelector('#follower_count').innerHTML) - 1;
+                    document.querySelector('#follow-btn').className = 'btn btn-primary';
+                } else if (data['action'] === 'follow'){
+                    document.querySelector('#follow-btn').innerHTML = 'Unfollow';
+                    document.querySelector('#follow-btn').className = 'btn btn-outline-primary';
+                    document.querySelector('#follower_count').innerHTML = Number(document.querySelector('#follower_count').innerHTML) + 1;
+                }
+            })
+        });
+    </script>
 {% endblock %}
