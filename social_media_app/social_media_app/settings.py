@@ -84,11 +84,11 @@ WSGI_APPLICATION = 'social_media_app.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.mysql',
-        'NAME': 'social_media_app',
-        'USER': 'root',
-        'PASSWORD': 'Fefe2003',
-        'HOST': '127.0.0.1',
-        'PORT': '3306',
+        'NAME': 'django_social_media_app',
+        'USER': 'sammy',
+        'PASSWORD': 'password',
+        'HOST': 'localhost',
+        'PORT': '',
         'OPTIONS': {
             'init_command': 'SET sql_mode="STRICT_TRANS_TABLES"'
         }
