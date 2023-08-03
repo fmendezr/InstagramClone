@@ -53,7 +53,10 @@
                         <div class="modal-body">
                             <img src='{{ post.image.url }}' class='img-fluid w-100'>
                             <div class='container d-flex justify-content-between'>
-                                <img id='m{{ post.id }}' class='like-btn icon' src='{% static "images/favourite.svg" %}'/>
+                                <div>
+                                    <img id='m{{ post.id }}' class='like-btn icon' src='{% static "images/favourite.svg" %}'/>
+                                    <img id='c{{ post.id }}' class='comment-btn icon'src='{% static "images/comment.svg" %}'  data-bs-toggle="modal" data-bs-target="#cm{{ post.id }}"/>
+                                </div>
                                 <img id='a{{ post.id }}' class='download-btn icon' src='{% static "images/cloud_download.svg" %}'/>
                             </div>
                             {% if post.no_likes == 0 %}
@@ -71,6 +74,24 @@
                                 <form action='{% url "delete_post" post.id %}' method='POST'>{% csrf_token %}<button type="submit" class="btn btn-danger">Delete Post</button></form>
                             {% endif %}
                         </div>
+                      </div>
+                    </div>
+                </div>
+                <div class="modal fade" id="cm{{post.id }}" tabindex="-1" aria-labelledby="cm{{post.id}}" aria-hidden="true">
+                    <div class="modal-dialog modal-dialog-scrollable">
+                      <div class="modal-content">
+                        <div class="modal-header">
+                          <h5 class="modal-title" id="exampleModalLabel">Comments</h5>
+                          <button type="button" class="btn-close" data-bs-toggle="modal" data-bs-target="#bruh{{post.id}}" aria-label="Close"></button>
+                        </div>
+                        <div class="modal-body" id='mb{{post.id}}'>
+                            No Comments
+                        </div>
+                        <form class="modal-footer justify-content-center" id='form{{post.id}}'>
+                            {% csrf_token %}
+                            <div class='col-9 m-0'><input type='text' class='form-control' id='comment{{post.id}}' name='comment'/></div>
+                            <button class='btn btn-primary col-3 m-0' type='submit' id='submitcomment{{post.id}}'>Post</button>
+                        </form>
                       </div>
                     </div>
                 </div>
@@ -124,7 +145,49 @@
                                 document.querySelector('img#a{{ post.id }}').src = '{% static "images/cloud_download.svg" %}';
                             }
                         })
-                    });                       
+                    });
+                    document.querySelector('#c{{ post.id }}').addEventListener('click', () => {
+                        fetch(`{% url 'comments' post.id %}`)
+                        .then(response => response.json())
+                        .then(data => {
+                            let users = JSON.parse(data['users']);
+                            let comments = JSON.parse(data['comments']);
+                            document.querySelector('#mb{{post.id}}').innerHTML = ''
+                            for (let i = 0; i < users.length; i++){
+                                document.querySelector('#mb{{post.id}}').innerHTML += `
+                                    <div class='row align-center' id='shhs${comments[i]['pk']}'>
+                                        <p class='col-10 align-center'>
+                                            <a href="/profile/${users[i]['fields']['username']}" style='text-decoration: none'>@${users[i]['fields']['username']}</a>
+                                            ${comments[i]['fields']['comment']}
+                                        </p>
+                                    </div>
+                                `
+                            }
+                        })
+                    });     
+                    document.querySelector('#form{{post.id}}').addEventListener('submit', e => {
+                        e.preventDefault()
+                        fetch(`{% url 'comments' post.id %}`, {
+                            'method': 'POST',
+                            'headers': {
+                                'X-CSRFToken': document.querySelector('[name=csrfmiddlewaretoken]').value,
+                            },
+                            'body': new FormData(document.querySelector('#form{{post.id}}'))
+                        })
+                        .then(response => response.json())
+                        .then(data => {
+                            document.querySelector('#mb{{post.id}}').innerHTML += `
+                                    <div class='row'>
+                                        <p>
+                                            <a href="/profile/${data['user']}" style='text-decoration: none'>@${data['user']}</a>
+                                            ${data['comment']}
+                                            <em style='color: red'>NEW</em>
+                                        </p>
+                                    </div>
+                                `
+                            document.querySelector('#comment{{post.id}}').value = ''
+                        })
+                    });                  
                 </script>
             {% endfor %}
         </div>

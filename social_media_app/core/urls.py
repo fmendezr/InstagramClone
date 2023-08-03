@@ -14,6 +14,7 @@ urlpatterns = [
     path('saved-posts/', views.saved_posts, name='saved_posts'), 
     path('save/<str:postid>', views.save, name='save'),
     path('is-saved/<str:postid>', views.is_saved, name='is_saved'),
+    path('comments/<str:postid>', views.comments, name='comments'),
     path('signup/', views.signup, name='signup'),
     path('login/', views.login, name='login'),
     path('logout/', views.logout, name='logout'),

@@ -3,6 +3,7 @@ from django.http import HttpResponse, JsonResponse
 from django.contrib.auth.models import User
 from django.contrib.auth.decorators import login_required
 from django.contrib import auth
+from django.core.serializers import serialize
 from . import models
 
 # Create your views here.
@@ -157,13 +158,27 @@ def save(request, postid):
         save_post.save()
         return JsonResponse({'action': 'saved'})
 
-@login_required(login_url='login')
+@login_required(login_url='login/')
 def is_saved(request, postid):
     if models.SavePost.objects.filter(post__id=postid, user=request.user).exists():
         return JsonResponse({'liked': "yes"})
     else:
         return JsonResponse({'liked': "no"})
 
+
+@login_required(login_url='login/')
+def comments(request, postid):
+    if request.method == 'POST':
+        post = models.Post.objects.get(id=postid)
+        comment_text = request.POST['comment']
+        comment = models.CommentPost(post=post, user=request.user, comment=comment_text)
+        comment.save()
+        return JsonResponse({'user': request.user.username, 'comment': comment_text})
+    comments = models.CommentPost.objects.filter(post__id=postid).order_by('created')
+    users_in_comments = [comment.user for comment in comments]
+    data_2 = serialize('json', users_in_comments, fields=['username'])
+    data = serialize('json', comments)
+    return JsonResponse({'comments': data, 'users': data_2})
 
 def signup(request):
     if request.method == 'POST':
