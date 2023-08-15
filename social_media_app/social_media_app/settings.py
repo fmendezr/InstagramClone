@@ -29,10 +29,9 @@ environ.Env.read_env(os.path.join(BASE_DIR, '.env'))
 SECRET_KEY = 'django-insecure-9l_0qxr!v8u=td4rdy6f4=q0^sn9j#965=w)d2_@o)9z3as=qj'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = False
+DEBUG = True
 
-ALLOWED_HOSTS = ['52.205.122.181', 'localhost']
-
+ALLOWED_HOSTS = ['52.205.122.181', '127.0.0.1' ,'localhost']
 
 # Application definition
 
@@ -84,11 +83,11 @@ WSGI_APPLICATION = 'social_media_app.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.mysql',
-        'NAME': 'django_social_media_app',
-        'USER': 'sammy',
-        'PASSWORD': 'password',
-        'HOST': 'localhost',
-        'PORT': '',
+        'NAME': 'social_media_app',
+        'USER': 'root',
+        'PASSWORD': 'Fefe2003',
+        'HOST': '127.0.0.1',
+        'PORT': '3306',
         'OPTIONS': {
             'init_command': 'SET sql_mode="STRICT_TRANS_TABLES"'
         }
@@ -130,9 +129,9 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/4.2/howto/static-files/
 
-STATIC_URL = 'static/'
-
-STATIC_ROOT = os.path.join(BASE_DIR, 'static/')
+STATIC_URL = '/static/'
+STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
+STATICFILES_DIRS = (os.path.join(BASE_DIR, 'static'),)
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/4.2/ref/settings/#default-auto-field
