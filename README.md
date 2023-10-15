@@ -32,3 +32,14 @@ commenting, following/follower relationship and a dynamic feed. </p>
   <li>AWS S3</li>
   <li>Bootstrap 5</li>
 </ul>
+
+<h2>Installation</h2>
+<ol>
+  <li>Clone project to your local system</li>
+  <li>Create a virtual enviroment (venv is the one I prefer)</li>
+  <li>Download dependencies, use the requirements.txt in ./social_media_app</li>
+  <li>Update the database info (Name, User, Password, Host) to match the database you are going to use. MUST be a MySQL database , if  not you will have to modify more settings and might need to download packages.</li>
+  <li>Run "python3 manage.py makemigrations"</li>
+  <li>Run "python3 manage.py migrate</li>
+  <li>Run "python3 manage.py runserver" to get a look at project in development server hosted locally</li>
+</ol>
