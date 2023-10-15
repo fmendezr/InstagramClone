@@ -1,6 +1,6 @@
 # Instagram Clone 
 
-<p> Full-stack, cloud integrated Instagram clone with user authentication, photo sharing, liking, and
+<p>&emsp;&emsp;Full-stack, cloud integrated Instagram clone with user authentication, photo sharing, liking, and
 commenting, following/follower relationship and a dynamic feed. </p>
 
 <H2>Preview</H2>
